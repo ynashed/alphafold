@@ -116,6 +116,8 @@ flags.DEFINE_integer('random_seed', None, 'The random seed for the data '
 flags.DEFINE_boolean('use_precomputed_msas', False, 'Whether to read MSAs that '
                      'have been written to disk. WARNING: This will not check '
                      'if the sequence, database or configuration have changed.')
+flags.DEFINE_integer('n_cpu', 8, 'The number of cpus/cores used for various '
+                     'calculations. By default, it set to 8 cores.')
 
 FLAGS = flags.FLAGS
 
@@ -357,14 +359,16 @@ def main(argv):
       template_searcher=template_searcher,
       template_featurizer=template_featurizer,
       use_small_bfd=use_small_bfd,
-      use_precomputed_msas=FLAGS.use_precomputed_msas)
+      use_precomputed_msas=FLAGS.use_precomputed_msas,
+      n_cpu=FLAGS.n_cpu)
 
   if run_multimer_system:
     data_pipeline = pipeline_multimer.DataPipeline(
         monomer_data_pipeline=monomer_data_pipeline,
         jackhmmer_binary_path=FLAGS.jackhmmer_binary_path,
         uniprot_database_path=FLAGS.uniprot_database_path,
-        use_precomputed_msas=FLAGS.use_precomputed_msas)
+        use_precomputed_msas=FLAGS.use_precomputed_msas,
+        n_cpu=FLAGS.n_cpu)
   else:
     data_pipeline = monomer_data_pipeline
 

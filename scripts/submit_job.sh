@@ -15,8 +15,9 @@ FASTA_PATH=/sdf/group/ml/CryoNet/alphafold/test_fasta/T1050.fasta
 #mkdir -p "${LSCRATCH_PATH}"
 #cp -aruv "${DBS_PATH}/." "${LSCRATCH_PATH}"
 
-singularity run --env TF_FORCE_UNIFIED_MEMORY=1,XLA_PYTHON_CLIENT_MEM_FRACTION=4.0,OP$
+singularity run --env TF_FORCE_UNIFIED_MEMORY=1,XLA_PYTHON_CLIENT_MEM_FRACTION=4.0,OPENMM_CPU_THREADS=${SLURM_NTASKS} \
                 -B /sdf -B ${DBS_PATH}:/data -B .:/etc --nv ${SIF_PATH} \
+                --n_cpu=${SLURM_NTASKS} \
                 --fasta_paths=${FASTA_PATH} \
                 --output_dir=${OUT_PATH} \
                 --data_dir=/data/ \
@@ -26,7 +27,7 @@ singularity run --env TF_FORCE_UNIFIED_MEMORY=1,XLA_PYTHON_CLIENT_MEM_FRACTION=4
                 --template_mmcif_dir=/data/pdb_mmcif/mmcif_files \
                 --obsolete_pdbs_path=/data/pdb_mmcif/obsolete.dat \
                 --bfd_database_path=/data/bfd/bfd \
-                --uniclust30_database_path=/data/uniclust30/uniclust30_2018_08/uniclu$
+                --uniclust30_database_path=/data/uniclust30/uniclust30_2018_08/uniclust30 \
                 --max_template_date=2021-07-28 \
                 --model_preset=monomer \
                 --db_preset=full_dbs
