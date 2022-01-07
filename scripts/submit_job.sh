@@ -17,7 +17,7 @@ LSCRATCH_PATH="${LSCRATCH}"/alphafold/data/
 #DBS_PATH="${LSCRATCH_PATH}"
 
 mkdir -p "${OUT_PATH}"
-cp "$0" "${OUT_PATH}"/submit_job.sh
+cp "$0" "${OUT_PATH}"/submit_job_"${SLURM_NTASKS}".sh
 
 singularity run --env TF_FORCE_UNIFIED_MEMORY=1,XLA_PYTHON_CLIENT_MEM_FRACTION=4.0 \
                 --env OPENMM_CPU_THREADS=${SLURM_NTASKS},NVIDIA_VISIBLE_DEVICES=all \
