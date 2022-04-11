@@ -118,6 +118,8 @@ flags.DEFINE_boolean('use_precomputed_msas', False, 'Whether to read MSAs that '
                      'if the sequence, database or configuration have changed.')
 flags.DEFINE_integer('n_cpu', 8, 'The number of cpus/cores used for various '
                      'calculations. By default, it set to 8 cores.')
+flags.DEFINE_boolean('skip_relaxation', False, 'Whether to skip Amber relaxation.'
+                     'By default, it is set to False, so it will run relaxation.')
 
 FLAGS = flags.FLAGS
 
@@ -388,12 +390,11 @@ def main(argv):
   logging.info('Have %d models: %s', len(model_runners),
                list(model_runners.keys()))
 
-  amber_relaxer = relax.AmberRelaxation(
-      max_iterations=RELAX_MAX_ITERATIONS,
-      tolerance=RELAX_ENERGY_TOLERANCE,
-      stiffness=RELAX_STIFFNESS,
-      exclude_residues=RELAX_EXCLUDE_RESIDUES,
-      max_outer_iterations=RELAX_MAX_OUTER_ITERATIONS)
+  amber_relaxer = None if FLAGS.skip_relaxation else relax.AmberRelaxation(max_iterations=RELAX_MAX_ITERATIONS,
+                                                                           tolerance=RELAX_ENERGY_TOLERANCE,
+                                                                           stiffness=RELAX_STIFFNESS,
+                                                                           exclude_residues=RELAX_EXCLUDE_RESIDUES,
+                                                                           max_outer_iterations=RELAX_MAX_OUTER_ITERATIONS)
 
   random_seed = FLAGS.random_seed
   if random_seed is None:
