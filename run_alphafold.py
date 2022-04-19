@@ -120,6 +120,8 @@ flags.DEFINE_integer('n_cpu', 8, 'The number of cpus/cores used for various '
                      'calculations. By default, it set to 8 cores.')
 flags.DEFINE_boolean('skip_relaxation', False, 'Whether to skip Amber relaxation.'
                      'By default, it is set to False, so it will run relaxation.')
+flags.DEFINE_string('features_pkl_path', None, 'Path to file containing a '
+                    'the features pickle file from a previous run. Use at your own risk. ')
 
 FLAGS = flags.FLAGS
 
@@ -162,7 +164,10 @@ def predict_structure(
 
   # Get features.
   t_0 = time.time()
-  if is_prokaryote is None:
+  if FLAGS.features_pkl_path is not None:
+      with open(FLAGS.features_pkl_path, 'rb') as f:
+          feature_dict = pickle.load(f)
+  elif is_prokaryote is None:
     feature_dict = data_pipeline.process(
         input_fasta_path=fasta_path,
         msa_output_dir=msa_output_dir)
